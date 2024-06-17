@@ -8,6 +8,7 @@ export default function Home() {
   useEffect(() => {
     if (!isOpen) onOpen();
   }, [isOpen, onOpen]);
+  return null;
   return (
     <div>
       <p>Namaste Rasayan</p>

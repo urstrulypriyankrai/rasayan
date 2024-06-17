@@ -15,11 +15,14 @@ import {
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 const formSchema = z.object({
   name: z.string().min(1),
 });
 
 export const StoreModal = () => {
+  const router = useRouter();
   const storeModal = useStoreModal();
   const [loading, setLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -37,11 +40,15 @@ export const StoreModal = () => {
         body: JSON.stringify(values),
       });
       const data = await response.json();
-      console.log(data.data);
-    } catch (error) {
-      console.log("Something went wrong in ", error);
+      if (response.status == 200) {
+        toast.success("Store Created!");
+        router.push(`/${data.id}`);
+      } else toast.error(data.errorMsg);
+    } catch (error: any) {
+      console.log(error);
     } finally {
       setLoading(false);
+      storeModal.onClose();
     }
   };
 
@@ -78,6 +85,7 @@ export const StoreModal = () => {
                 variant={"outline"}
                 onClick={storeModal.onClose}
                 disabled={loading}
+                type="reset"
               >
                 Cancel
               </Button>

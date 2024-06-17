@@ -9,32 +9,33 @@ import {
   SignedOut,
 } from "@clerk/nextjs";
 import ModalProvider from "@/providers/modal-providers";
-import prismadb from "@/lib/prismadb";
+import { ToastProvider } from "@/providers/toast-provider";
+// import { auth } from "@clerk/nextjs/server";
+// import { redirect } from "next/navigation";
+// import prismadb from "@/lib/prismadb";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body>
-          <header>
-            <SignedOut>
-              <SignInButton />
-              <RedirectToSignIn />
-            </SignedOut>
-          </header>
+    <html lang="en">
+      <body>
+        <ClerkProvider>
+          <SignedOut>
+            <RedirectToSignIn />
+          </SignedOut>
           <SignedIn>
+            <ToastProvider />
             <ModalProvider />
             {children}
           </SignedIn>
-        </body>
-      </html>
-    </ClerkProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }
 

@@ -9,10 +9,10 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const { name } = body;
 
-        if (!userId) return new NextResponse("Unauthorized user ", {
+        if (!userId) return NextResponse.json({ errorMsg: "Unauthorized user " }, {
             status: 401
         })
-        if (!name) return new NextResponse("Name is Required ", {
+        if (!name) return NextResponse.json({ errorMsg: "Name is Required " }, {
             status: 401
         })
 
@@ -25,9 +25,10 @@ export async function POST(req: NextRequest) {
             }
         )
         if (isUserExist)
-            return new NextResponse("Sotre Already Exist", {
-                status: 401
-            })
+            return NextResponse.json({ errorMsg: "Sotre Already Exist" }, {
+                status: 401,
+
+            },)
         const store = await prismadb.store.create(
             {
                 data: {
@@ -36,10 +37,12 @@ export async function POST(req: NextRequest) {
                 }
             }
         )
+        console.log(store)
         if (store) {
             return NextResponse.json({
-                data: store
-            });
+                data: store,
+
+            }, { status: 200 });
 
         }
 
@@ -47,7 +50,7 @@ export async function POST(req: NextRequest) {
     } catch (error) {
 
         console.log('[store_post]', error);
-        return new NextResponse("Internal Server Error ", {
+        return NextResponse.json({ errorMsg: "Internal Server Error " }, {
             status: 500
         })
     }
