@@ -5,6 +5,7 @@ import prismadb from "@/lib/prismadb";
 import { redirect, useParams } from "next/navigation";
 import React from "react";
 import SettingForm from "./_components/SettingForm";
+import ApiUrlCard from "@/components/ApiUrlCard";
 
 type Props = {
   params: {
@@ -35,6 +36,12 @@ async function SettingPage({ params }: Props) {
           <SettingForm name={store.name} />
         </div>
       </div>
+      <Separator />
+      <ApiUrlCard
+        title="NEXT_PUBLIC_API_URL"
+        description={`${params.storeId}`}
+        variant="Admin"
+      />
     </div>
   );
 }
