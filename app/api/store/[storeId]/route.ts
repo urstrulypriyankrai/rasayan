@@ -71,17 +71,20 @@ export async function PATCH(
                 }
             );
 
-        const data = prismadb.store.updateMany({
-            where: { id: params.storeId, userId },
+        const data = await prismadb.store.updateMany({
+            where: {
+                id: params.storeId,
+                userId: userId
+            },
             data: {
                 name
             }
         })
 
-        if (true) {
+        if (data) {
             return NextResponse.json(
                 {
-                    errorMsg: "Store Deleted Successfully",
+                    message: "Renamed Sucessfully",
                 },
                 {
                     status: 200,
@@ -98,4 +101,5 @@ export async function PATCH(
             }
         );
     }
+
 }

@@ -1,8 +1,10 @@
 import CustomAlertDialog from "@/components/CustomAlertDialog";
+import { Separator } from "@/components/ui/separator";
 import { getUserId } from "@/lib/getUserId";
 import prismadb from "@/lib/prismadb";
 import { redirect, useParams } from "next/navigation";
-import React, { Suspense } from "react";
+import React from "react";
+import SettingForm from "./_components/SettingForm";
 
 type Props = {
   params: {
@@ -15,17 +17,24 @@ async function SettingPage({ params }: Props) {
   const store = await prismadb.store.findFirst({
     where: {
       userId,
+      id: params.storeId,
     },
   });
   if (!store) redirect("/");
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col justify-center px-2 md:px-6 lg:px-10">
       <Heading
         title={"Setting"}
         description="Manage Store Prefrences"
         storeId={params.storeId}
       />
+      <Separator />
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 py-6 bg-card">
+        <div className="">
+          <SettingForm name={store.name} />
+        </div>
+      </div>
     </div>
   );
 }
@@ -43,14 +52,12 @@ const Heading = ({
 }) => {
   const userId = getUserId();
   return (
-    <div className="flex items-center px-2 md:px-6 lg:px-10 mt-2 md:mt-3 justify-between">
+    <div className="flex items-center  my-1 md:my-1.5 justify-between">
       <div className=" flex flex-col">
         <h1 className="text-3xl tracking-tight font-bold">{title}</h1>
         <span>{description}</span>
       </div>
-      <Suspense fallback={<span>loading....</span>}>
-        <CustomAlertDialog url={`/api/store/${storeId}`} userId={userId} />
-      </Suspense>
+      <CustomAlertDialog url={`/api/store/${storeId}`} userId={userId} />
     </div>
   );
 };
