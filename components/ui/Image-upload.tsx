@@ -33,27 +33,31 @@ export default function ImageUpload({
 
   return (
     <div>
-      <div className="mb-4 flex items-center gap-4">
-        {value.map((url) => {
-          return (
-            <div
-              key={url}
-              className="relative w-[200px] h-[200px] rounded-md overflow-hidden"
-            >
-              <div className="z-10 absolute top-2 right-2">
-                <Button
-                  type="button"
-                  variant="destructive"
-                  onClick={() => onRemove(url)}
-                  size="icon"
-                >
-                  <Trash />
-                </Button>
-                <Image fill className="object-cover" alt="Image" src={url} />
-              </div>
+      <div className="mb-4 flex items-center gap-4 flex-wrap">
+        {value.map((url) => (
+          <div
+            key={url}
+            className="relative w-[60%] h-[350px] rounded-md overflow-hidden"
+          >
+            <Image
+              src={url}
+              alt="Uploaded Image"
+              layout="fill"
+              objectFit="cover"
+              className="rounded-md"
+            />
+            <div className="absolute top-2 right-2 z-10">
+              <Button
+                type="button"
+                variant="destructive"
+                onClick={() => onRemove(url)}
+                size="icon"
+              >
+                <Trash />
+              </Button>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
       <CldUploadWidget onSuccess={onUpload} uploadPreset="m9nn0voz">
         {({ open }) => {

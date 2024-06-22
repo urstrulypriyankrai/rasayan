@@ -32,7 +32,8 @@ type Props = {
 };
 
 function BillboardForm({ billboard }: Props) {
-  const { storeId } = useParams();
+  const { storeId, billboardId } = useParams();
+  console.log("Store ID ", storeId, " ", billboardId);
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
@@ -63,19 +64,52 @@ function BillboardForm({ billboard }: Props) {
 
   async function onSubmit(values: z.infer<typeof billboardSchema>) {
     try {
-      const response = await fetch(`/api/store/${storeId}`, {
-        method: "PATCH",
-        body: JSON.stringify({
-          label: values.label,
-          imageUrl: values.imageUrl,
-        }),
-      });
+      let response = null;
+      setLoading(true);
+
+      if (billboard) {
+        response = await fetch(`/api/${storeId}/billboard/${billboardId}`, {
+          method: "PATCH",
+          body: JSON.stringify({
+            label: values.label,
+            imageUrl: values.imageUrl,
+          }),
+        });
+      } else {
+        response = await fetch(`/api/${storeId}/billboard`, {
+          method: "POST",
+          body: JSON.stringify({
+            label: values.label,
+            imageUrl: values.imageUrl,
+          }),
+        });
+      }
       if (response.status === 200) {
         toast.success(headingPageProps.toastMessage);
         router.refresh();
       }
     } catch (error) {
       toast.error("Something went wrong!");
+    } finally {
+      setLoading(false);
+    }
+  }
+  async function onDelete() {
+    try {
+      setLoading(true);
+      const response = await fetch(`/${storeId}/billboard/${billboardId}`, {
+        method: "DELETE",
+      });
+
+      router.refresh();
+      router.push("/");
+      if (response.status === 200) {
+        toast.success("Deleted Successfully");
+      }
+    } catch (error) {
+      toast.error("Make Sure you remove all the categories first");
+    } finally {
+      setLoading(false);
     }
   }
 
