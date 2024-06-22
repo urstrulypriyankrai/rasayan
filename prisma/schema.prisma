@@ -16,9 +16,22 @@ datasource db {
 }
 
 model Store {
-  id        String   @id @default(uuid())
+  id        String      @id @default(uuid())
   name      String
   userId    String
+  billBoard BillBoard[] @relation("BillBoardToStore")
+  createdAt DateTime    @default(now())
+  updateAt  DateTime    @updatedAt
+}
+
+model BillBoard {
+  id        String   @id @default(uuid())
+  storeId   String
+  store     Store    @relation("BillBoardToStore", fields: [storeId], references: [id])
+  label     String
+  imageUrl  String
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
+
+  @@index([storeId])
 }

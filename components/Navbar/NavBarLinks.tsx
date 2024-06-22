@@ -11,14 +11,19 @@ const NavBarLinks = ({
   const params = useParams();
   const routes = [
     {
+      href: `/${params.storeId}/settings`,
+      label: "Setting",
+      active: path === `/${params.storeId}/settings`,
+    },
+    {
       href: `/${params.storeId}`,
       label: "Dashboard",
       active: path === `/${params.storeId}`,
     },
     {
-      href: `/${params.storeId}/settings`,
-      label: "Setting",
-      active: path === `/${params.storeId}/settings`,
+      href: `/${params.storeId}/billboard`,
+      label: "Billboards",
+      active: path === `/${params.storeId}`,
     },
   ];
 
