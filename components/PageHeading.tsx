@@ -6,14 +6,10 @@ import { Separator } from "./ui/separator";
 type Props = {
   title: string;
   description: string;
-  ActionButton?: JSX.Element | any;
+  ButtonComponent?: React.ReactNode;
 };
 
-const PageHeading = ({
-  title,
-  description,
-  ActionButton = () => null,
-}: Props) => {
+const PageHeading = ({ title, description, ButtonComponent }: Props) => {
   return (
     <>
       <div className="flex flex-col justify-center px-2 md:px-6 lg:px-10">
@@ -22,8 +18,7 @@ const PageHeading = ({
             <h1 className="text-3xl tracking-tight font-bold">{title}</h1>
             <span>{description}</span>
           </div>
-          {/* ActionButton */}
-          <ActionButton />
+          {ButtonComponent}
         </div>
         <Separator />
       </div>

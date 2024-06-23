@@ -6,10 +6,12 @@ import { cn } from "@/lib/utils";
 type Props = {
   className?: string;
   variant?: string;
+  onDelete: () => void;
 };
 
 const DeleteButton = ({
   className,
+  onDelete,
   variant = "destructive",
   ...otherProps
 }: Props) => {
@@ -19,6 +21,7 @@ const DeleteButton = ({
         "flex items-center justify-center w-10 h-10  rounded-sm border border-green p-0 bg-destructive text-destructive-foreground"
       )}
       {...otherProps}
+      onClick={() => onDelete()}
     >
       <Trash />
     </div>

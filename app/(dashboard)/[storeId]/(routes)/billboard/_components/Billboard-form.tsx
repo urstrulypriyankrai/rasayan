@@ -33,7 +33,6 @@ type Props = {
 
 function BillboardForm({ billboard }: Props) {
   const { storeId, billboardId } = useParams();
-  console.log("Store ID ", storeId, " ", billboardId);
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
@@ -97,13 +96,11 @@ function BillboardForm({ billboard }: Props) {
   async function onDelete() {
     try {
       setLoading(true);
-      const response = await fetch(`/${storeId}/billboard/${billboardId}`, {
+      const response = await fetch(`/api/${storeId}/billboard/${billboardId}`, {
         method: "DELETE",
       });
-
-      router.refresh();
-      router.push("/");
       if (response.status === 200) {
+        router.push(`/${storeId}/billboard`);
         toast.success("Deleted Successfully");
       }
     } catch (error) {
@@ -116,16 +113,16 @@ function BillboardForm({ billboard }: Props) {
   return (
     <>
       <div>
-        {billboard ? (
+        {!billboard ? (
           <PageHeading
             title={headingPageProps.heading}
             description={headingPageProps.description}
-            ActionButton={DeleteButton}
           />
         ) : (
           <PageHeading
             title={headingPageProps.heading}
             description={headingPageProps.description}
+            ButtonComponent={<DeleteButton onDelete={onDelete} />}
           />
         )}
       </div>

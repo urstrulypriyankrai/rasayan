@@ -7,14 +7,14 @@ type Props = {
 };
 
 const Page = (props: Props) => {
-  console.log(props.params);
+
 
   return (
     <>
       <PageHeading
         title="Billboard (0)"
         description="Create New Billboard"
-        ActionButton={CreateButton}
+        ButtonComponent={<CreateButton />}
       />
     </>
   );
