@@ -21,7 +21,7 @@ type Props = {
   DialogTitle?: string;
   DialogDescription?: string;
   children?: React.ReactNode;
-  onAction?: () => Promise<void>;
+  onAction?: () => Promise<any>;
 };
 
 function CustomAlertDialog({
@@ -76,7 +76,7 @@ function CustomAlertDialog({
             <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive hover:bg-destructive/90"
-              // onClick={url ? handleDelete : onAction}
+              // @ts-ignore
               onClick={() => onAction()}
               disabled={loading}
               onSubmit={onAction}
