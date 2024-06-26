@@ -11,11 +11,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Spinner from "@/components/ui/spinner";
 import { CopyIcon, Edit, MoreHorizontal, Trash } from "lucide-react";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { useParams } from "next/navigation";
 import { Suspense } from "react";
 import toast from "react-hot-toast";
-
+import { handleDelete } from "../_serverActions";
 export default function CellAction({
   billboard,
 }: {
@@ -25,30 +25,17 @@ export default function CellAction({
   };
 }) {
   const { storeId } = useParams();
-  async function handleDelete() {
-    try {
-      const billboardDeleted = await fetch(
-        `/api/${storeId}/billboard/${billboard.id}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (billboardDeleted.status === 200) {
-        toast.success("Deleted Sucessfully");
-       
-      } else {
-        toast.error("Unable to delete");
-      }
-    } catch (error: any) {
-      console.log("Someting went wrong", error.message);
-    }
-  }
+  let updatedHandleDelete = handleDelete
+    // @ts-ignore
+    .bind(null, storeId.toString(), billboard.id);
+  // @ts-ignore
+
   return (
     <Suspense fallback={<Spinner />}>
       <CustomAlertDialog
         DialogTitle="Are you sure ?"
         DialogDescription="do you want to delete billboard permanently"
-        onAction={handleDelete}
+        onAction={updatedHandleDelete}
       >
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

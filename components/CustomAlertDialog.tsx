@@ -64,25 +64,29 @@ function CustomAlertDialog({
   }
 
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger>{children}</AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{DialogTitle}</AlertDialogTitle>
-          <AlertDialogDescription>{DialogDescription}</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            className="bg-destructive hover:bg-destructive/90"
-            onClick={url ? handleDelete : onAction}
-            disabled={loading}
-          >
-            Continue
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <form action={onAction}>
+      <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialogTrigger>{children}</AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{DialogTitle}</AlertDialogTitle>
+            <AlertDialogDescription>{DialogDescription}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive hover:bg-destructive/90"
+              // onClick={url ? handleDelete : onAction}
+              onClick={() => onAction()}
+              disabled={loading}
+              onSubmit={onAction}
+            >
+              Continue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </form>
   );
 }
 
