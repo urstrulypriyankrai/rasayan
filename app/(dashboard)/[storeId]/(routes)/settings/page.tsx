@@ -2,7 +2,7 @@ import CustomAlertDialog from "@/components/CustomAlertDialog";
 import { Separator } from "@/components/ui/separator";
 import { getUserId } from "@/lib/getUserId";
 import prismadb from "@/lib/prismadb";
-import { redirect, useParams } from "next/navigation";
+import { redirect } from "next/navigation";
 import React from "react";
 import SettingForm from "./_components/SettingForm";
 import ApiUrlCard from "@/components/ApiUrlCard";

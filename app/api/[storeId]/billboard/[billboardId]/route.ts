@@ -1,5 +1,6 @@
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs/server";
+import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
@@ -57,6 +58,9 @@ export async function GET(
                 status: 500,
             }
         );
+    }
+    finally {
+        revalidateTag("getBillBoards")
     }
 
 }
@@ -117,6 +121,9 @@ export async function DELETE(
                 status: 500,
             }
         );
+    }
+    finally {
+        revalidateTag("getBillBoards")
     }
 
 }
@@ -188,6 +195,9 @@ export async function PATCH(
                 status: 500,
             }
         );
+    }
+    finally {
+        revalidateTag("getBillBoards")
     }
 
 }

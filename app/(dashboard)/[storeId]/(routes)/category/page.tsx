@@ -30,7 +30,7 @@ const Page = async ({ params }: Props) => {
   return (
     <>
       <PageHeading
-        title={`Billboard (${filteredData?.length})`}
+        title={`Billboard (${category?.length})`}
         description="Create New Billboard"
         ButtonComponent={<CreateButton />}
       />

@@ -25,6 +25,11 @@ const NavBarLinks = ({
       label: "Billboards",
       active: path === `/${params.storeId}`,
     },
+    {
+      href: `/${params.storeId}/category`,
+      label: "Categories",
+      active: path === `/${params.storeId}`,
+    },
   ];
 
   return (

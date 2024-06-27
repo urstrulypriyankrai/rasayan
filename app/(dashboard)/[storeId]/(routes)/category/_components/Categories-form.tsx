@@ -16,24 +16,23 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
-import { BillBoard } from "@prisma/client";
+import { category } from "@prisma/client";
 import PageHeading from "@/components/PageHeading";
 import DeleteButton from "@/components/ui/custom/DeleteButton";
 import ImageUpload from "@/components/ui/Image-upload";
 import { useEffect, useState } from "react";
-import { revalidatePath, revalidateTag } from "next/cache";
 
-const billboardSchema = z.object({
+const categorySchema = z.object({
   label: z.string().min(3).max(50),
   imageUrl: z.string().url().optional(),
 });
 
 type Props = {
-  billboard: BillBoard | null;
+  category: category | null;
 };
 
-function BillboardForm({ billboard }: Props) {
-  const { storeId, billboardId } = useParams();
+function CategoriesForm({ category }: Props) {
+  const { storeId, categoryId } = useParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
@@ -42,33 +41,33 @@ function BillboardForm({ billboard }: Props) {
   }, []);
 
   let headingPageProps = {
-    heading: "Create Billboard",
-    description: "Create a billboard",
-    toastMessage: "Billboard Created",
+    heading: "Create category",
+    description: "Create a category",
+    toastMessage: "category Created",
     action: "Create",
   };
-  if (billboard) {
-    headingPageProps.heading = "Edit Billboard";
-    headingPageProps.description = "Edit a billboard";
-    headingPageProps.toastMessage = "Billboard Updated";
-    headingPageProps.action = "Edit Billboard";
+  if (category) {
+    headingPageProps.heading = "Edit category";
+    headingPageProps.description = "Edit a category";
+    headingPageProps.toastMessage = "category Updated";
+    headingPageProps.action = "Edit category";
   }
 
-  const form = useForm<z.infer<typeof billboardSchema>>({
-    resolver: zodResolver(billboardSchema),
+  const form = useForm<z.infer<typeof categorySchema>>({
+    resolver: zodResolver(categorySchema),
     defaultValues: {
-      label: billboard?.label || "",
-      imageUrl: billboard?.imageUrl || "",
+      label: category?.label || "",
+      imageUrl: category?.imageUrl || "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof billboardSchema>) {
+  async function onSubmit(values: z.infer<typeof categorySchema>) {
     try {
       let response = null;
       setLoading(true);
 
-      if (billboard) {
-        response = await fetch(`/api/${storeId}/billboard/${billboardId}`, {
+      if (category) {
+        response = await fetch(`/api/${storeId}/category/${categoryId}`, {
           method: "PATCH",
           body: JSON.stringify({
             label: values.label,
@@ -76,7 +75,7 @@ function BillboardForm({ billboard }: Props) {
           }),
         });
       } else {
-        response = await fetch(`/api/${storeId}/billboard`, {
+        response = await fetch(`/api/${storeId}/category`, {
           method: "POST",
           body: JSON.stringify({
             label: values.label,
@@ -92,26 +91,16 @@ function BillboardForm({ billboard }: Props) {
       toast.error("Something went wrong!");
     } finally {
       setLoading(false);
-      const res = await new Promise((resolve, reject) => {
-        // @ts-ignore
-        const isRouted: boolean = router.push(`/${storeId}/billboard`);
-        if (isRouted) {
-          router.refresh();
-          resolve("resolved");
-        } else {
-          reject();
-        }
-      });
     }
   }
   async function onDelete() {
     try {
       setLoading(true);
-      const response = await fetch(`/api/${storeId}/billboard/${billboardId}`, {
+      const response = await fetch(`/api/${storeId}/category/${categoryId}`, {
         method: "DELETE",
       });
       if (response.status === 200) {
-        router.push(`/${storeId}/billboard`);
+        router.push(`/${storeId}/category`);
         toast.success("Deleted Successfully");
       }
     } catch (error) {
@@ -124,12 +113,7 @@ function BillboardForm({ billboard }: Props) {
   return (
     <>
       <div>
-        {!billboard ? (
-          <PageHeading
-            title={headingPageProps.heading}
-            description={headingPageProps.description}
-          />
-        ) : (
+        {categoryId && (
           <PageHeading
             title={headingPageProps.heading}
             description={headingPageProps.description}
@@ -137,31 +121,35 @@ function BillboardForm({ billboard }: Props) {
           />
         )}
       </div>
-      <div className="px-2 md:px-6 lg:px-10 mt-6 md:grid ">
+      <div className="px-2 md:px-6 lg:px-10 mt-6 ">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="">
-            <FormField
-              control={form.control}
-              name="imageUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Background Image</FormLabel>
-                  <FormControl>
-                    <ImageUpload
-                      value={field.value ? [field.value] : []}
-                      disabled={loading}
-                      onChange={(url) => field.onChange(url)}
-                      onRemove={() => field.onChange("")}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Upload an image for the billboard
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div id="formContainer" className="grid grid-cols-5 gap-7 my-2 ">
+            <div
+              id="formContainer"
+              className="flex space-y-2 justify-around flex-col md:flex-row"
+            >
+              <FormField
+                control={form.control}
+                name="imageUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Background Image</FormLabel>
+                    <FormControl>
+                      <ImageUpload
+                        value={field.value ? [field.value] : []}
+                        disabled={loading}
+                        onChange={(url) => field.onChange(url)}
+                        onRemove={() => field.onChange("")}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Upload an image for the category
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="label"
@@ -170,26 +158,29 @@ function BillboardForm({ billboard }: Props) {
                     <FormLabel>Label</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder={billboard?.label || "Enter Label Name"}
+                        placeholder={category?.label || "Enter Label Name"}
                         {...field}
                         className="rounded-sm "
                       />
                     </FormControl>
                     <FormDescription>
-                      Enter the label for the billboard
+                      Enter the label for the category
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            <Button
-              type="submit"
-              variant={"default"}
-              className="border border-input"
-            >
-              Save
-            </Button>
+            <div className="grid place-items-center w-full my-6">
+              <Button
+                type="submit"
+                variant={"default"}
+                size={"lg"}
+                className="border border-input mx-auto"
+              >
+                Save
+              </Button>
+            </div>
           </form>
         </Form>
       </div>
@@ -197,4 +188,4 @@ function BillboardForm({ billboard }: Props) {
   );
 }
 
-export default BillboardForm;
+export default CategoriesForm;
