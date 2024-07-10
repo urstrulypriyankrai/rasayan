@@ -86,6 +86,7 @@ function BillboardForm({ billboard }: Props) {
       }
       if (response.status === 200) {
         toast.success(headingPageProps.toastMessage);
+        revalidatePath(`/${storeId}/billboard`);
         router.refresh();
       }
     } catch (error) {

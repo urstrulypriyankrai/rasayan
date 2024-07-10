@@ -4,7 +4,7 @@ import React from "react";
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./_components/BillboardColumns";
 import { getBillBoards } from "@/lib/_cacheHooks/getBillBoards";
-import Spinner from "@/components/ui/spinner";
+import Spinner, { FullPageSpinner } from "@/components/ui/spinner";
 import prismadb from "@/lib/prismadb";
 import { format } from "date-fns";
 
@@ -15,7 +15,7 @@ type Props = {
 };
 
 const Page = async ({ params }: Props) => {
-  const category = await prismadb.category.findMany({
+  const category = await prismadb.billBoard.findMany({
     where: {
       storeId: params.storeId,
     },
@@ -23,7 +23,8 @@ const Page = async ({ params }: Props) => {
   const filteredData = category.map((item) => {
     return {
       id: item.id,
-      name: item.name,
+      label: item.label,
+      createdAt: format(item.createdAt, "do MMM, yyyy"),
     };
   });
 
@@ -36,9 +37,9 @@ const Page = async ({ params }: Props) => {
       />
       <div className="md:mx-6 lg:mx-10 mx-1 mt-6">
         {/* @ts-ignore */}
-        <DataTable columns={columns} data={category} />
+        <DataTable columns={columns} data={filteredData} />
       </div>
-      <Spinner />
+      <FullPageSpinner />
     </>
   );
 };

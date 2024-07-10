@@ -12,7 +12,7 @@ import {
 import Spinner from "@/components/ui/spinner";
 import { CopyIcon, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Suspense } from "react";
 import toast from "react-hot-toast";
 import { handleDelete } from "../_serverActions";
@@ -25,6 +25,7 @@ export default function CellAction({
   };
 }) {
   const { storeId } = useParams();
+  const router = useRouter();
   let updatedHandleDelete = handleDelete
     // @ts-ignore
     .bind(null, storeId.toString(), billboard.id);
@@ -55,7 +56,9 @@ export default function CellAction({
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => billboard.onClick()}
+              onClick={() => {
+                router.push(`/${storeId}/billboard/${billboard.id}`);
+              }}
               className="space-x-2"
             >
               <Edit />

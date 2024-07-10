@@ -65,7 +65,7 @@ function CustomAlertDialog({
 
   return (
     <form action={onAction}>
-      <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialog open={open && loading} onOpenChange={setOpen}>
         <AlertDialogTrigger>{children}</AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>

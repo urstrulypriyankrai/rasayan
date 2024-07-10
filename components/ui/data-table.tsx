@@ -25,13 +25,16 @@ import { useState } from "react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  filterFieldName?: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  filterFieldName = "label",
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
   const table = useReactTable({
     data,
     columns,
@@ -39,6 +42,9 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      columnFilters,
+    },
   });
 
   return (
@@ -46,9 +52,12 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter ..."
-          value={(table.getColumn("label")?.getFilterValue() as string) ?? ""}
+          type="text"
+          value={
+            (table.getColumn(filterFieldName)?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
-            table.getColumn("label")?.setFilterValue(event.target.value)
+            table.getColumn(filterFieldName)?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
