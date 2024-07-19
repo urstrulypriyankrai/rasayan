@@ -1,10 +1,9 @@
 import PageHeading from "@/components/PageHeading";
-import CreateButton from "./_components/CreateButton";
 import React from "react";
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./_components/BillboardColumns";
 import prismadb from "@/lib/prismadb";
-import { format } from "date-fns";
+import CreateCategoryForm from "./_components/CreateCategoryForm";
 
 type Props = {
   params: {
@@ -13,29 +12,31 @@ type Props = {
 };
 
 const Page = async ({ params }: Props) => {
-  const category = await prismadb.billBoard.findMany({
+  const allCategories = await prismadb.category.findMany({
     where: {
       storeId: params.storeId,
     },
-  });
-  const filteredData = category.map((item) => {
-    return {
-      id: item.id,
-      label: item.label,
-      createdAt: format(item.createdAt, "do MMM, yyyy"),
-    };
+    select: {
+      billboard: {
+        select: {
+          label: true,
+        },
+      },
+    },
   });
 
   return (
     <>
+      <CreateCategoryForm category={null} />
+
       <PageHeading
-        title={`Billboard (${filteredData?.length})`}
-        description="Create New Billboard"
-        ButtonComponent={<CreateButton />}
+        title={`All Categories (${allCategories?.length})`}
+        description="Create a New Category"
+        ButtonComponent={null}
       />
       <div className="md:mx-6 lg:mx-10 mx-1 mt-6">
         {/* @ts-ignore */}
-        <DataTable columns={columns} data={filteredData} />
+        <DataTable columns={columns} data={allCategories} />
       </div>
     </>
   );

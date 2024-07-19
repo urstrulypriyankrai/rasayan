@@ -33,12 +33,12 @@ export async function handleDelete(storeId: string, billboardId: string) {
         storeId: storeId,
       },
     });
+    return {
+      message: "ok",
+    };
   } catch (error: any) {
     console.log("Someting went wrong", error.message);
   } finally {
     revalidateTag("getBillBoards");
-    return {
-      message: "ok",
-    };
   }
 }
