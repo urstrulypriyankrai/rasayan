@@ -17,6 +17,8 @@ const Page = async ({ params }: Props) => {
       storeId: params.storeId,
     },
     select: {
+      id: true,
+      name: true,
       billboard: {
         select: {
           label: true,
@@ -24,7 +26,7 @@ const Page = async ({ params }: Props) => {
       },
     },
   });
-
+  console.log(allCategories);
   return (
     <>
       <CreateCategoryForm category={null} />

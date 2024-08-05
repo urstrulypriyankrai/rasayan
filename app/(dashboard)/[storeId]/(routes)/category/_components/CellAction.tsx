@@ -13,7 +13,7 @@ import Spinner from "@/components/ui/spinner";
 import { CopyIcon, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { useParams, useRouter } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import toast from "react-hot-toast";
 import { handleDelete } from "../_serverActions";
 export default function CellAction({
@@ -26,10 +26,19 @@ export default function CellAction({
 }) {
   const { storeId } = useParams();
   const router = useRouter();
-  let updatedHandleDelete = handleDelete
-    // @ts-ignore
-    .bind(null, storeId.toString(), billboard.id);
-  // @ts-ignore
+  const [showDialog, setShowDialog] = useState(false);
+  // let updatedHandleDelete = handleDelete
+  //   // @ts-ignore
+  //   .bind(null, storeId.toString(), billboard.id);
+  // // @ts-ignore
+
+  async function updatedHandleDelete() {
+   try {
+      const response = await fetch('')
+   } catch (error) {
+    
+   }
+  }
 
   return (
     <Suspense fallback={<Spinner />}>
@@ -37,6 +46,7 @@ export default function CellAction({
         DialogTitle="Are you sure ?"
         DialogDescription="do you want to delete billboard permanently"
         onAction={updatedHandleDelete}
+        setShowDialog={showDialog}
       >
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -48,7 +58,10 @@ export default function CellAction({
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(billboard.id)}
+              onClick={() => {
+                toast.success("ID Copied");
+                navigator.clipboard.writeText(billboard.id);
+              }}
               className="space-x-2"
             >
               <CopyIcon />
@@ -64,7 +77,12 @@ export default function CellAction({
               <Edit />
               <span>Update</span>
             </DropdownMenuItem>
-            <DropdownMenuItem className="space-x-2">
+            <DropdownMenuItem
+              className="space-x-2"
+              onClick={() => {
+                setShowDialog(true);
+              }}
+            >
               <Trash />
               <span>Delete</span>
             </DropdownMenuItem>
